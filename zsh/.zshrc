@@ -69,25 +69,48 @@ mkcd() {
 # Claude directory management
 export CLAUDE_HOME="$HOME/Code/dotfiles/claude"
 
-# Link .claude to current directory
+# Copy .claude to current directory
 claude-here() {
-    if [ -L ".claude" ]; then
-        echo "📎 .claude already linked here"
-    elif [ -e ".claude" ]; then
-        echo "❌ .claude already exists as a real directory/file"
+    if [ -e ".claude" ]; then
+        echo "⚠️  .claude already exists here. Use 'claude-sync' to update it."
     else
-        ln -s "$CLAUDE_HOME" .claude
-        echo "✅ Linked .claude → $CLAUDE_HOME"
+        cp -r "$CLAUDE_HOME" .claude
+        echo "✅ Copied .claude to current directory"
+        echo "📁 $(find .claude -type f | wc -l | xargs) files copied"
     fi
 }
 
-# Remove .claude link from current directory
+# Sync/update existing .claude with latest from source
+claude-sync() {
+    if [ ! -e ".claude" ]; then
+        echo "❌ No .claude here. Use 'claude-here' first."
+    else
+        # Use rsync to update, preserving local changes to settings.local.json
+        rsync -av --delete --exclude='settings.local.json' "$CLAUDE_HOME/" .claude/
+        # Only update settings.local.json if it doesn't exist locally
+        if [ ! -f ".claude/settings.local.json" ] && [ -f "$CLAUDE_HOME/settings.local.json" ]; then
+            cp "$CLAUDE_HOME/settings.local.json" .claude/
+        fi
+        echo "🔄 Synced .claude with latest from $CLAUDE_HOME"
+        echo "📝 Preserved local settings.local.json"
+    fi
+}
+
+# Remove .claude from current directory
 claude-remove() {
     if [ -L ".claude" ]; then
         rm .claude
-        echo "🗑️  Removed .claude link"
-    elif [ -e ".claude" ]; then
-        echo "❌ .claude is not a symlink, not removing"
+        echo "🔗 Removed .claude symlink"
+    elif [ -d ".claude" ]; then
+        echo "⚠️  About to delete .claude directory and all its contents"
+        echo -n "Are you sure? (y/N): "
+        read confirm
+        if [[ "$confirm" =~ ^[Yy]$ ]]; then
+            rm -rf .claude
+            echo "🗑️  Removed .claude directory"
+        else
+            echo "❌ Cancelled"
+        fi
     else
         echo "❓ No .claude found here"
     fi
@@ -96,11 +119,37 @@ claude-remove() {
 # Check if .claude is available
 claude-status() {
     if [ -L ".claude" ]; then
-        echo "📎 .claude is linked to: $(readlink .claude)"
-    elif [ -e ".claude" ]; then
-        echo "📁 .claude exists as a real directory/file"
+        echo "🔗 .claude is a symlink to: $(readlink .claude)"
+        echo "⚠️  Symlinks may not work properly with Claude"
+    elif [ -d ".claude" ]; then
+        echo "📁 .claude exists as a directory"
+        echo "📊 $(find .claude -type f | wc -l | xargs) files"
+        echo "💾 $(du -sh .claude | cut -f1) total size"
+        # Check if it's up to date
+        if [ -f "$CLAUDE_HOME/settings.local.json" ] && [ -f ".claude/settings.local.json" ]; then
+            if ! diff -q "$CLAUDE_HOME/settings.local.json" ".claude/settings.local.json" > /dev/null 2>&1; then
+                echo "ℹ️  Local settings.local.json differs from source"
+            fi
+        fi
     else
         echo "❌ No .claude in current directory"
+    fi
+}
+
+# Push local .claude changes back to source (careful!)
+claude-push() {
+    if [ ! -d ".claude" ]; then
+        echo "❌ No .claude directory here"
+    else
+        echo "⚠️  This will overwrite $CLAUDE_HOME with local .claude"
+        echo -n "Are you sure? (y/N): "
+        read confirm
+        if [[ "$confirm" =~ ^[Yy]$ ]]; then
+            rsync -av --delete .claude/ "$CLAUDE_HOME/"
+            echo "⬆️  Pushed local .claude to $CLAUDE_HOME"
+        else
+            echo "❌ Cancelled"
+        fi
     fi
 }
 
@@ -108,6 +157,8 @@ claude-status() {
 alias ch='claude-here'
 alias cr='claude-remove'
 alias cs='claude-status'
+alias csync='claude-sync'
+alias cpush='claude-push'
 
 # Extract various archive formats
 extract() {
