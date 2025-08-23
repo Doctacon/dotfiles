@@ -98,10 +98,7 @@ claude-sync() {
 
 # Remove .claude from current directory
 claude-remove() {
-    if [ -L ".claude" ]; then
-        rm .claude
-        echo "🔗 Removed .claude symlink"
-    elif [ -d ".claude" ]; then
+    if [ -d ".claude" ]; then
         echo "⚠️  About to delete .claude directory and all its contents"
         echo -n "Are you sure? (y/N): "
         read confirm
@@ -118,10 +115,7 @@ claude-remove() {
 
 # Check if .claude is available
 claude-status() {
-    if [ -L ".claude" ]; then
-        echo "🔗 .claude is a symlink to: $(readlink .claude)"
-        echo "⚠️  Symlinks may not work properly with Claude"
-    elif [ -d ".claude" ]; then
+    if [ -d ".claude" ]; then
         echo "📁 .claude exists as a directory"
         echo "📊 $(find .claude -type f | wc -l | xargs) files"
         echo "💾 $(du -sh .claude | cut -f1) total size"
