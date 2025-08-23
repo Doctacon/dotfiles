@@ -81,3 +81,6 @@ export GPG_TTY=$(tty)
 
 # Custom configuration
 export DOTFILES="$HOME/Code/dotfiles"
+
+# Ripgrep configuration
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"

@@ -88,6 +88,19 @@ extract() {
     fi
 }
 
+# Ripgrep aliases for data engineering
+alias rgs='rg --type=sql'           # Search SQL files
+alias rgpy='rg --type=py'           # Search Python files  
+alias rgdata='rg --type=data'       # Search data files (csv, json, etc)
+alias rgconfig='rg --type=config'   # Search config files
+alias rgnb='rg --type=notebook'     # Search Jupyter notebooks
+alias rgdocker='rg --type=docker'   # Search Docker files
+alias rgk8s='rg --type=k8s'         # Search Kubernetes files
+alias rgdbt='rg --type=dbt'         # Search DBT files
+alias rgi='rg --no-ignore'          # Search including ignored files
+alias rgf='rg --files'              # List all files that would be searched
+alias rgc='rg --count'              # Count matches per file
+
 # Source local configuration if it exists
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
