@@ -9,10 +9,6 @@ line-number = "relative"
 cursorline = true
 cursorcolumn = false
 
-# Show indent guides
-indent-guides.render = true
-indent-guides.character = "│"
-
 # Highlight matching brackets
 auto-pairs = true
 
@@ -32,9 +28,6 @@ soft-wrap.enable = true
 
 # Rulers at specific columns
 rulers = [80, 120]
-
-# File picker
-file-picker.hidden = false  # Show hidden files
 
 # Auto save
 auto-save = false
@@ -101,12 +94,6 @@ layout = ["diff", "diagnostics", "line-numbers", "spacer"]
 [editor.gutters.line-numbers]
 min-width = 3
 
-[editor.gutters.diagnostics]
-gutter = true
-
-[editor.gutters.diff]
-gutter = true
-
 # Key remappings (optional - these are some common ones)
 [keys.normal]
 # Quick save
@@ -119,31 +106,30 @@ C-u = ["half_page_up", "align_view_center"]
 # Better undo/redo
 U = "redo"
 
-# Window management
-C-w-v = "vsplit"
-C-w-s = "hsplit"
+# Window management (use C-w then v or s)
+# Note: These are handled by default helix bindings
 
 # Quick buffer switching
 tab = "goto_next_buffer"
 S-tab = "goto_previous_buffer"
 
-# File tree toggle (requires file tree plugin if available)
-space-e = "file_picker"
-space-f = "file_picker"
+# Space-based keybindings
+space.e = "file_picker"
+space.f = "file_picker"
+space.r = "rename_symbol"
+space.a = "code_action"
 
-# LSP features
-space-r = "rename_symbol"
-space-a = "code_action"
-g-d = "goto_definition"
-g-r = "goto_references"
-g-i = "goto_implementation"
+# Goto keybindings
+g.d = "goto_definition"
+g.r = "goto_reference"
+g.i = "goto_implementation"
 
 # Git blame feature
 A-b = ":sh git blame -L %{selection:line-min},%{selection:line-max} %{filename}"
 
 [keys.insert]
-# Escape with jk or jj
-j-k = "normal_mode"
+# Escape with jk
+j.k = "normal_mode"
 
 [keys.select]
 # Keep selection when indenting
