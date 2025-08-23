@@ -1,0 +1,148 @@
+# Helix Editor Configuration
+# Documentation: https://docs.helix-editor.com/configuration.html
+
+theme = "catppuccin_mocha"  # Popular theme, change to your preference
+
+[editor]
+# Line number display
+line-number = "relative"
+cursorline = true
+cursorcolumn = false
+
+# Show indent guides
+indent-guides.render = true
+indent-guides.character = "│"
+
+# Highlight matching brackets
+auto-pairs = true
+
+# Scrolling
+scrolloff = 8
+mouse = true
+
+# True color support
+true-color = true
+
+# Show special characters
+whitespace.render = "all"
+whitespace.characters = { space = "·", nbsp = "⍽", tab = "→", newline = "⏎" }
+
+# Soft wrap long lines
+soft-wrap.enable = true
+
+# Rulers at specific columns
+rulers = [80, 120]
+
+# File picker
+file-picker.hidden = false  # Show hidden files
+
+# Auto save
+auto-save = false
+
+# Completion
+completion-trigger-len = 2
+auto-completion = true
+auto-info = true
+
+# Smart tab
+smart-tab.enable = true
+
+# Buffer line (tab bar)
+bufferline = "multiple"  # Show when multiple buffers are open
+
+# Color modes in gutter
+color-modes = true
+
+# Cursor shape in different modes
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+# Status line configuration
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "file-modification-indicator"]
+center = ["file-type"]
+right = ["diagnostics", "selections", "position", "position-percentage", "file-encoding"]
+separator = "│"
+
+# LSP configuration
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+display-signature-help-docs = true
+snippets = true
+goto-reference-include-declaration = true
+
+# Search configuration
+[editor.search]
+smart-case = true
+wrap-around = true
+
+# File-specific settings
+[editor.file-picker]
+hidden = false
+follow-symlinks = true
+git-ignore = true
+git-global = true
+git-exclude = true
+max-depth = 10
+
+# Indentation
+[editor.indent-guides]
+render = true
+character = "╎"
+skip-levels = 1
+
+# Git integration signs
+[editor.gutters]
+layout = ["diff", "diagnostics", "line-numbers", "spacer"]
+
+[editor.gutters.line-numbers]
+min-width = 3
+
+[editor.gutters.diagnostics]
+gutter = true
+
+[editor.gutters.diff]
+gutter = true
+
+# Key remappings (optional - these are some common ones)
+[keys.normal]
+# Quick save
+C-s = ":w"
+
+# Center cursor after moving
+C-d = ["half_page_down", "align_view_center"]
+C-u = ["half_page_up", "align_view_center"]
+
+# Better undo/redo
+U = "redo"
+
+# Window management
+C-w-v = "vsplit"
+C-w-s = "hsplit"
+
+# Quick buffer switching
+tab = "goto_next_buffer"
+S-tab = "goto_previous_buffer"
+
+# File tree toggle (requires file tree plugin if available)
+space-e = "file_picker"
+space-f = "file_picker"
+
+# LSP features
+space-r = "rename_symbol"
+space-a = "code_action"
+g-d = "goto_definition"
+g-r = "goto_references"
+g-i = "goto_implementation"
+
+[keys.insert]
+# Escape with jk or jj
+j-k = "normal_mode"
+
+[keys.select]
+# Keep selection when indenting
+tab = "indent"
+S-tab = "unindent"
