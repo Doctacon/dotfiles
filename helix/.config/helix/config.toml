@@ -138,6 +138,9 @@ g-d = "goto_definition"
 g-r = "goto_references"
 g-i = "goto_implementation"
 
+# Git blame feature
+A-b = ":sh git blame -L %{selection:line-min},%{selection:line-max} %{filename}"
+
 [keys.insert]
 # Escape with jk or jj
 j-k = "normal_mode"
