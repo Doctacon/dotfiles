@@ -143,9 +143,6 @@ module.exports = {
     // Set to `false` for no bell
     bell: 'SOUND',
 
-    // If `true`, selected text will automatically be copied to the clipboard
-    copyOnSelect: false,
-
     // If `true`, hyper will be set as the default terminal
     defaultSSHApp: true,
 
@@ -190,9 +187,11 @@ module.exports = {
   // Format: [@org/]project[#version]
   plugins: [
     // 'hyper-snazzy',           // Theme
-    // 'hyper-search',            // Search functionality
+    'hyper-search',            // Search functionality
     // 'hyper-pane',              // Enhanced pane navigation
-    // 'hypercwd',                // Open new tabs in same directory
+    'hypercwd',                // Open new tabs in same directory
+    'hyperpower',
+    'hyper-aura-theme'
     // 'hyper-statusline',        // Status line
     // 'hyper-tab-icons',         // Tab icons
     // 'hyperterm-paste',         // Safe paste mode
