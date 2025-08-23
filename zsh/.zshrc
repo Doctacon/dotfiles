@@ -66,6 +66,49 @@ mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
+# Claude directory management
+export CLAUDE_HOME="$HOME/Code/dotfiles/claude"
+
+# Link .claude to current directory
+claude-here() {
+    if [ -L ".claude" ]; then
+        echo "📎 .claude already linked here"
+    elif [ -e ".claude" ]; then
+        echo "❌ .claude already exists as a real directory/file"
+    else
+        ln -s "$CLAUDE_HOME" .claude
+        echo "✅ Linked .claude → $CLAUDE_HOME"
+    fi
+}
+
+# Remove .claude link from current directory
+claude-remove() {
+    if [ -L ".claude" ]; then
+        rm .claude
+        echo "🗑️  Removed .claude link"
+    elif [ -e ".claude" ]; then
+        echo "❌ .claude is not a symlink, not removing"
+    else
+        echo "❓ No .claude found here"
+    fi
+}
+
+# Check if .claude is available
+claude-status() {
+    if [ -L ".claude" ]; then
+        echo "📎 .claude is linked to: $(readlink .claude)"
+    elif [ -e ".claude" ]; then
+        echo "📁 .claude exists as a real directory/file"
+    else
+        echo "❌ No .claude in current directory"
+    fi
+}
+
+# Shorthand aliases
+alias ch='claude-here'
+alias cr='claude-remove'
+alias cs='claude-status'
+
 # Extract various archive formats
 extract() {
     if [ -f $1 ]; then
