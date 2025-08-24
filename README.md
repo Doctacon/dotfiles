@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal configuration files for my development environment, optimized for data engineering workflows.
+My personal development environment configuration files.
 
 ## 🛠 Tools Configured
 
@@ -9,7 +9,6 @@ Personal configuration files for my development environment, optimized for data 
 - **[Helix](#helix)** - Modern text editor with LSP support and git blame integration
 - **[tmux](#tmux)** - Terminal multiplexer with vim-style navigation
 - **[Hyper](#hyper)** - Terminal emulator with custom theme
-- **[Ripgrep](#ripgrep)** - Fast search tool configured for data engineering
 
 ## 📁 Directory Structure
 
@@ -27,44 +26,84 @@ dotfiles/
 ├── tmux/
 │   └── .tmux.conf      # tmux configuration
 ├── hyper/
-│   └── .hyper.js       # Hyper terminal configuration
-└── ripgrep/
-    └── .config/ripgrep/
-        └── config      # Ripgrep search configuration
+    └── .hyper.js       # Hyper terminal configuration
 ```
 
-## 🚀 Quick Installation
+## 🚀 New Computer Setup
 
-### Prerequisites
+Setting up your development environment on a new Mac.
 
+### 1. Install Homebrew
 ```bash
-# macOS
-brew install stow git zsh tmux helix ripgrep
-
-# Ubuntu/Debian
-sudo apt-get install stow git zsh tmux helix ripgrep
-
-# Arch
-sudo pacman -S stow git zsh tmux helix ripgrep
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### Setup with GNU Stow
-
-1. **Clone the repository:**
+### 2. Install Essential Tools
 ```bash
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/Code/dotfiles
-cd ~/Code/dotfiles
+# Core tools
+brew install git stow zsh tmux helix
+
+# Python tools
+brew install uv
 ```
 
-2. **Create symlinks for all configurations:**
+### 3. Clone Your Dotfiles
 ```bash
-stow -v zsh git helix tmux hyper ripgrep
+# Create directory structure
+mkdir -p ~/Code
+cd ~/Code
+
+# Clone your dotfiles
+git clone https://github.com/Doctacon/dotfiles.git
+cd dotfiles
 ```
 
-3. **Set up Git user info:**
+### 4. Link Everything with Stow
 ```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
+# Link all configs at once
+stow zsh git helix tmux
+
+# Or link individually if you prefer
+stow zsh    # Shell config
+stow git    # Git config
+stow helix  # Editor config
+stow tmux   # Terminal multiplexer
+```
+
+### 5. Install Python Language Servers for Helix
+```bash
+# Install Python LSPs
+uv tool install pyright
+uv tool install ruff-lsp
+```
+
+### 6. Set ZSH as Default Shell
+```bash
+# Add homebrew zsh to allowed shells
+sudo sh -c "echo $(which zsh) >> /etc/shells"
+
+# Change default shell
+chsh -s $(which zsh)
+```
+
+### 7. Restart Terminal
+Close and reopen your terminal, or run:
+```bash
+source ~/.zshrc
+```
+
+### That's it! 🎉
+
+Your environment is ready. Test it out:
+```bash
+# Check helix is working with LSP
+hx --health python
+
+# Test git aliases
+git s
+
+# Test ripgrep
+rg "test"
 ```
 
 ## 📦 Stow Management
@@ -175,23 +214,6 @@ ls -la ~/.zshrc
 - Custom tab styling
 - ZSH as default shell
 
-### Ripgrep
-
-**Features:**
-- Searches hidden files (respects .gitignore)
-- Smart case search by default
-- Custom file types for data engineering
-- Ignores common build artifacts and large files
-- Pretty output with context
-
-**Custom Types:**
-- `sql` - SQL files
-- `data` - CSV, JSON, Parquet files
-- `notebook` - Jupyter notebooks
-- `docker` - Dockerfiles
-- `k8s` - Kubernetes manifests
-- `dbt` - DBT project files
-
 ## 🔧 Customization
 
 ### Local Overrides
@@ -214,48 +236,36 @@ cd ~/Code/dotfiles
 stow vim
 ```
 
-## 🐛 Troubleshooting
+## 🐛 Common Issues & Fixes
 
-### Stow Conflicts
+### "stow: conflict" error
+This means files already exist where stow wants to create symlinks.
 ```bash
-# If you get conflicts, adopt existing files:
-stow --adopt zsh
-
-# Or backup and remove existing files:
+# Option 1: Back up existing file and retry
 mv ~/.zshrc ~/.zshrc.backup
 stow zsh
+
+# Option 2: Force adopt existing files
+stow --adopt zsh
 ```
 
-### Symlinks Not Working
-- Ensure you're in the dotfiles directory when running stow
-- Check file permissions
-- Remove existing files before stowing
-
-### Shell Not Loading Config
+### Helix can't find Python packages
+Make sure you've installed and activated your virtual environment:
 ```bash
-# Set ZSH as default shell
-chsh -s $(which zsh)
+# Create and activate virtual environment
+uv venv
+source .venv/bin/activate
 
-# Reload configuration
+# Install project dependencies
+uv sync  # if using pyproject.toml
+# or
+uv pip install <package>  # for individual packages
+```
+
+### Terminal doesn't look right
+Make sure you restarted your terminal after setup, or run:
+```bash
 source ~/.zshrc
-```
-
-### Helix Config Errors
-```bash
-# Validate configuration
-hx --health
-
-# Check for TOML syntax errors
-hx --version
-```
-
-### Ripgrep Not Using Config
-```bash
-# Ensure environment variable is set
-echo $RIPGREP_CONFIG_PATH
-
-# Should output: ~/.config/ripgrep/config
-# If not, reload shell or source ~/.zshenv
 ```
 
 ## 📚 Additional Resources
