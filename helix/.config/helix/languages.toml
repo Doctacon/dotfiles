@@ -1,0 +1,33 @@
+# Helix Languages Configuration
+# Documentation: https://docs.helix-editor.com/languages.html
+
+# Python Language Server Configuration
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
+
+# Optional: Configure pyright settings
+config.python.analysis.autoSearchPaths = true
+config.python.analysis.useLibraryCodeForTypes = true
+config.python.analysis.diagnosticMode = "workspace"
+config.python.analysis.typeCheckingMode = "basic"
+
+# Python Language Configuration
+[[language]]
+name = "python"
+scope = "source.python"
+injection-regex = "python"
+file-types = ["py", "pyi", "py3", "pyw", "ptl", "rpy", "cpy", "ipy", "pyx"]
+shebangs = ["python", "python2", "python3"]
+roots = ["pyproject.toml", "setup.py", "poetry.lock", "requirements.txt"]
+comment-token = "#"
+language-servers = ["pyright", "ruff-lsp"]
+indent = { tab-width = 4, unit = "    " }
+auto-format = true
+
+# Ruff Language Server for formatting and linting
+[language-server.ruff-lsp]
+command = "ruff-lsp"
+config.settings.args = []
+config.settings.lint.enable = true
+config.settings.format.enable = true
