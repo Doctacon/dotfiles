@@ -106,6 +106,51 @@ git s
 rg "test"
 ```
 
+## 🏢 Work Machine Setup
+
+If you're setting this up on a work machine with existing configs and sensitive environment variables:
+
+### 1. Back Up Your Existing Environment Variables
+Before running stow, save your work-specific settings:
+```bash
+# Copy your existing environment variables to a local file
+cp ~/.zshrc ~/.zshrc.local
+
+# Edit to keep only work-specific stuff (API keys, paths, etc.)
+hx ~/.zshrc.local
+# Remove everything except your work-specific exports and configs
+```
+
+### 2. Run Normal Setup
+Follow the setup steps above. When you run `stow zsh`, it will replace your `.zshrc` with the dotfiles version.
+
+### 3. Your Work Variables Are Safe!
+The `.zshrc` from dotfiles automatically sources `~/.zshrc.local` if it exists, so all your work-specific environment variables will still load.
+
+### 4. What Goes Where?
+
+**In `~/.zshrc.local` (never committed):**
+```bash
+# Work-specific API keys
+export OPENAI_API_KEY="sk-..."
+export AWS_ACCESS_KEY_ID="..."
+export DATABASE_URL="..."
+
+# Company-specific paths
+export WORK_REPO="/Users/you/work/repo"
+
+# Corporate proxy settings
+export HTTP_PROXY="..."
+```
+
+**In dotfiles `.zshrc` (committed to git):**
+- General aliases and functions
+- Tool configurations
+- Generic PATH additions
+- Theme and prompt settings
+
+This way you get all your dotfiles goodness while keeping sensitive work data separate and secure.
+
 ## 📦 Stow Management
 
 ### Basic Commands
