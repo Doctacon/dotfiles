@@ -76,9 +76,9 @@ wrap-around = true
 [editor.file-picker]
 hidden = false
 follow-symlinks = true
-git-ignore = true
-git-global = true
-git-exclude = true
+git-ignore = false
+git-global = false
+git-exclude = false
 max-depth = 10
 
 # Indentation
