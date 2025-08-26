@@ -99,6 +99,7 @@ min-width = 3
 # Quick save
 C-s = ":w"
 space.d = ":sh rm %{buffer_name}"
+space.q = ":sh echo %{buffer_name} | pbcopy"
 
 # Center cursor after moving
 C-d = ["half_page_down", "align_view_center"]
@@ -115,8 +116,6 @@ tab = "goto_next_buffer"
 S-tab = "goto_previous_buffer"
 
 # Space-based keybindings
-space.e = "file_picker"
-space.f = "file_picker"
 space.r = "rename_symbol"
 space.a = "code_action"
 
