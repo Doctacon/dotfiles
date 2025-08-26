@@ -76,7 +76,7 @@ wrap-around = true
 [editor.file-picker]
 hidden = false
 follow-symlinks = true
-git-ignore = false
+git-ignore = true
 git-global = false
 git-exclude = false
 max-depth = 10
@@ -98,6 +98,7 @@ min-width = 3
 [keys.normal]
 # Quick save
 C-s = ":w"
+space.d = ":sh rm %{buffer_name}"
 
 # Center cursor after moving
 C-d = ["half_page_down", "align_view_center"]
