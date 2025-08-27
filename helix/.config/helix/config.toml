@@ -8,6 +8,7 @@ theme = "catppuccin_mocha"  # Popular theme, change to your preference
 line-number = "relative"
 cursorline = true
 cursorcolumn = false
+clipboard-provider = "pasteboard"
 
 # Highlight matching brackets
 auto-pairs = true
