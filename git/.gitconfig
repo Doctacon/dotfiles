@@ -2,8 +2,9 @@
 # ~/.gitconfig
 
 [user]
-    name = "Connor"
-    email = "loughondata@protonmail.com"
+	name = Connor
+	email = loughondata@protonmail.com
+	signingKey = 
 
 [core]
     editor = hx
@@ -173,6 +174,7 @@
     updateRefs = true
 
 [commit]
+	gpgSign = false
     # Sign commits with GPG (uncomment if you have GPG set up)
     # gpgsign = true
     
@@ -193,3 +195,11 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
     required = true
+[gpg]
+	format = 
+	program = gpg
+[tag]
+	forceSignAnnotated = false
+[gpg "ssh"]
+	program = 
+	allowedSignersFile = 
