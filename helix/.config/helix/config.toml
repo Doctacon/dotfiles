@@ -20,10 +20,6 @@ mouse = true
 # True color support
 true-color = true
 
-# Show special characters
-whitespace.render = "all"
-whitespace.characters = { space = "·", nbsp = "⍽", tab = "→", newline = "⏎" }
-
 # Soft wrap long lines
 soft-wrap.enable = true
 
