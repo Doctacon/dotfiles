@@ -17,7 +17,7 @@ This command creates a single git worktree where Claude will implement a task th
 ```
 /iterate 3 Refactor the authentication system to use JWT tokens
 
-/iterate 5 Add comprehensive error handling to the API endpoints
+/iterate 5 Add comprehensive data package testing
 
 /iterate 2 Optimize the database queries for better performance
 ```
@@ -80,5 +80,3 @@ After running this command:
 - Navigate to the worktree to review the final implementation
 - Review ITERATION_LOG.md to understand the evolution of the solution
 - Test and validate the final implementation
-- Commit and merge if satisfied with the result
-- Clean up worktree with `git worktree remove <path>`
