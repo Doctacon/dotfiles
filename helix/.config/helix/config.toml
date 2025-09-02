@@ -97,6 +97,7 @@ min-width = 3
 C-s = ":w"
 space.d = ":sh rm %{buffer_name}"
 space.q = ":sh echo %{buffer_name} | pbcopy"
+A-w = ":buffer-close"
 
 # Center cursor after moving
 C-d = ["half_page_down", "align_view_center"]
