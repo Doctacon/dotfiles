@@ -180,7 +180,7 @@ module.exports = {
     hyperlinks: true,
 
     // Modifier keys for opening links (cmd or ctrl)
-    modifierKeys: { cmdIsMeta: true, altIsMeta: false },
+    modifierKeys: { cmdIsMeta: true, altIsMeta: true },
   },
 
   // A list of plugins to fetch and install from npm
