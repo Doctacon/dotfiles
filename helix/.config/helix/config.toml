@@ -93,13 +93,13 @@ min-width = 3
 
 # Key remappings (optional - these are some common ones)
 [keys.normal]
-C-s = ":w"
 space.d = ":sh rm %{buffer_name}"
 space.q = ":sh echo %{buffer_name} | pbcopy"
 A-w = ":buffer-close"
 A-b = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 "A-S-h" = "extend_to_line_start"
 "A-S-l" = "extend_to_line_end"
+"C-s" = "extend_search_next"
 
 # Center cursor after moving
 C-d = ["half_page_down", "align_view_center"]
