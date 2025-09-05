@@ -101,6 +101,8 @@ A-b = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 "A-S-h" = "extend_to_line_start"
 "A-S-l" = "extend_to_line_end"
 "C-n" = "extend_search_next"
+"A-S-j" = "extend_to_file_end"
+"A-S-k" = "extend_to_file_start"
 
 # Center cursor after moving
 C-d = ["half_page_down", "align_view_center"]
