@@ -103,10 +103,18 @@ A-b = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 "C-n" = "extend_search_next"
 "A-S-j" = "extend_to_file_end"
 "A-S-k" = "extend_to_file_start"
-
-# Center cursor after moving
+"A-j" = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+"A-k" = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
 C-d = ["half_page_down", "align_view_center"]
 C-u = ["half_page_up", "align_view_center"]
+space.p = "paste_clipboard_before"
+space.P = "paste_clipboard_after"
+"S-l" = "extend_next_sub_word_end"
+"S-h" = "extend_prev_sub_word_end"
+
+
+[keys.insert.j]
+k = "normal_mode" # Maps `jk` to exit insert mode
 
 # Better undo/redo
 U = "redo"
@@ -126,10 +134,6 @@ space.a = "code_action"
 g.d = "goto_definition"
 g.r = "goto_reference"
 g.i = "goto_implementation"
-
-[keys.insert]
-# Escape with jk
-j.k = "normal_mode"
 
 [keys.select]
 # Keep selection when indenting
