@@ -111,7 +111,8 @@ space.p = "paste_clipboard_before"
 space.P = "paste_clipboard_after"
 "S-l" = "extend_next_sub_word_end"
 "S-h" = "extend_prev_sub_word_end"
-
+"tab" = ":buffer-next"
+"S-tab" = ":buffer-previous"
 
 [keys.insert.j]
 k = "normal_mode" # Maps `jk` to exit insert mode
