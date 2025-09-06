@@ -111,6 +111,9 @@ space.p = "paste_clipboard_before"
 space.P = "paste_clipboard_after"
 "S-l" = "extend_next_sub_word_end"
 "S-h" = "extend_prev_sub_word_end"
+"S-j" = "extend_line_up"
+"S-k" = "extend_line_down"
+"ret" = ["insert_mode", "insert_newline"]
 "tab" = ":buffer-next"
 "S-tab" = ":buffer-previous"
 
