@@ -169,6 +169,7 @@ module.exports = {
       lightCyan: '#a4ffff',
       lightWhite: '#ffffff'
     },
+    cursorBlink: true,
 
     // Windows only options
     windowSize: [1024, 768],
@@ -191,7 +192,8 @@ module.exports = {
     // 'hyper-pane',              // Enhanced pane navigation
     'hypercwd',                // Open new tabs in same directory
     'hyperpower',
-    'hyper-aura-theme'
+    'hyper-aura-theme',
+    'hyper-fading-scrollbar'
     // 'hyper-statusline',        // Status line
     // 'hyper-tab-icons',         // Tab icons
     // 'hyperterm-paste',         // Safe paste mode
