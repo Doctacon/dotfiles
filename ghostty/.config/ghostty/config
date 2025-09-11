@@ -80,3 +80,6 @@ keybind = cmd+zero=reset_font_size
 # Advanced features
 macos-titlebar-style = hidden
 macos-option-as-alt = true
+
+# Random aesthetics
+macos-icon = microchip
