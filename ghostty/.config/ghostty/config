@@ -80,10 +80,3 @@ keybind = cmd+zero=reset_font_size
 # Advanced features
 macos-titlebar-style = hidden
 macos-option-as-alt = true
-
-# Enhanced keyboard support
-# Enable the Kitty keyboard protocol for enhanced key handling
-keyboard-protocol = kitty
-
-# This allows better handling of Cmd key combinations and other enhanced keyboard features
-# that terminal applications can take advantage of
