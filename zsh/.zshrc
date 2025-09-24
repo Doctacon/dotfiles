@@ -198,6 +198,7 @@ alias rgc='rg --count'              # Count matches per file
 # eval "$(starship init zsh)"  # For starship prompt
 # eval "$(zoxide init zsh)"     # For zoxide (better cd)
 # eval "$(fzf --zsh)"          # For fzf fuzzy finder
+eval "$(direnv hook zsh)"     # For direnv environment management
 
 # Amazon Q post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
