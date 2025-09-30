@@ -8,16 +8,16 @@ font-size = 14
 font-feature = +liga
 
 # Terminal appearance
-theme = "Dracula"
+theme = "Light Owl"
 
 # Background and foreground colors (Dracula theme equivalent)
-background = 282a36
-foreground = eff0eb
+# background = 282a36
+# foreground = eff0eb
 
 # Cursor configuration
 cursor-style = block
-cursor-color = f81ce5
-cursor-text = 000000
+# cursor-color = f81ce5
+# cursor-text = 000000
 
 # Window appearance
 window-padding-x = 14
@@ -27,8 +27,8 @@ window-padding-y = 12
 scrollback-limit = 10000
 
 # Selection color
-selection-background = f81ce5
-selection-foreground = 000000
+# selection-background = f81ce5
+# selection-foreground = 000000
 
 # Shell configuration
 shell-integration = zsh
@@ -47,22 +47,22 @@ mouse-hide-while-typing = true
 confirm-close-surface = false
 
 # Custom colors (Dracula theme)
-palette = 0=#282a36
-palette = 1=#ff5555
-palette = 2=#50fa7b
-palette = 3=#f1fa8c
-palette = 4=#6272a4
-palette = 5=#bd93f9
-palette = 6=#8be9fd
-palette = 7=#f8f8f2
-palette = 8=#44475a
-palette = 9=#ff6e6e
-palette = 10=#69ff94
-palette = 11=#ffffa5
-palette = 12=#d6acff
-palette = 13=#ff92df
-palette = 14=#a4ffff
-palette = 15=#ffffff
+# palette = 0=#282a36
+# palette = 1=#ff5555
+# palette = 2=#50fa7b
+# palette = 3=#f1fa8c
+# palette = 4=#6272a4
+# palette = 5=#bd93f9
+# palette = 6=#8be9fd
+# palette = 7=#f8f8f2
+# palette = 8=#44475a
+# palette = 9=#ff6e6e
+# palette = 10=#69ff94
+# palette = 11=#ffffa5
+# palette = 12=#d6acff
+# palette = 13=#ff92df
+# palette = 14=#a4ffff
+# palette = 15=#ffffff
 
 # Keybindings (keeping macOS defaults mostly)
 keybind = cmd+t=new_tab

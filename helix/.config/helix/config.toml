@@ -1,7 +1,7 @@
 # Helix Editor Configuration
 # Documentation: https://docs.helix-editor.com/configuration.html
 
-theme = "catppuccin_mocha"  # Popular theme, change to your preference
+theme = "catppuccin_latte"  # Popular theme, change to your preference
 
 [editor]
 # Line number display
