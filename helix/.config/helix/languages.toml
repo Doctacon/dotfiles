@@ -31,3 +31,4 @@ command = "ruff-lsp"
 config.settings.args = []
 config.settings.lint.enable = true
 config.settings.format.enable = true
+

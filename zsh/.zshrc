@@ -156,6 +156,9 @@ alias cs='claude-status'
 alias csync='claude-sync'
 alias cpush='claude-push'
 
+# zoxide init
+eval "$(zoxide init zsh)"
+
 # Extract various archive formats
 extract() {
     if [ -f $1 ]; then
@@ -200,6 +203,7 @@ alias rgc='rg --count'              # Count matches per file
 # eval "$(fzf --zsh)"          # For fzf fuzzy finder
 eval "$(direnv hook zsh)"     # For direnv environment management
 
+export PATH="$HOME/.local/bin:$PATH"
+
 # Amazon Q post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
-export PATH="$HOME/.local/bin:$PATH"
