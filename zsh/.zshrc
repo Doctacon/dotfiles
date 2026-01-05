@@ -156,6 +156,19 @@ alias cs='claude-status'
 alias csync='claude-sync'
 alias cpush='claude-push'
 
+# Claude Code wrapper with Z.ai API configuration
+zclaude() {
+    env -u GOOGLE_GENAI_USE_VERTEXAI \
+        -u CLAUDE_CODE_USE_VERTEX \
+        -u CLOUD_ML_REGION \
+        -u ANTHROPIC_VERTEX_PROJECT_ID \
+        -u MCP_TIMEOUT \
+        ANTHROPIC_AUTH_TOKEN="$ZAI_API_KEY" \
+        ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic" \
+        API_TIMEOUT_MS="3000000" \
+        claude "$@"
+}
+
 # zoxide init
 eval "$(zoxide init zsh)"
 
