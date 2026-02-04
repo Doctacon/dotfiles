@@ -196,7 +196,7 @@
     process = git-lfs filter-process
     required = true
 [gpg]
-	format = 
+	format = openpgp
 	program = gpg
 [tag]
 	forceSignAnnotated = false
