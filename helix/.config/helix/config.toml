@@ -119,9 +119,11 @@ space.P = "paste_clipboard_after"
 "tab" = ":buffer-next"
 "S-tab" = ":buffer-previous"
 "y" = "yank_main_selection_to_clipboard"
+"esc" = "no_op"
 
 [keys.insert.j]
 k = "normal_mode" # Maps `jk` to exit insert mode
+l = "signature_help"
 
 # Better undo/redo
 U = "redo"
