@@ -224,3 +224,11 @@ export PATH="$PATH:$HOME/go/bin"
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
+# bun completions
+[ -s "/Users/crlough/.bun/_bun" ] && source "/Users/crlough/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="/Users/crlough/Code/external/opencode/packages/opencode/dist/opencode-darwin-arm64/bin:$PATH"
