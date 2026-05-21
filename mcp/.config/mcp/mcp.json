@@ -1,0 +1,14 @@
+{
+  "settings": {
+    "idleTimeout": 10
+  },
+  "mcpServers": {
+    "socraticode": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "socraticode"
+      ]
+    }
+  }
+}
