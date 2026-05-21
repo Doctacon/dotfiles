@@ -3,7 +3,7 @@
 
 [user]
 	name = Connor
-	email = loughondata@protonmail.com
+	email = connor@loughondata.com
 	signingKey = 
 
 [core]
@@ -187,7 +187,6 @@
 
 [url "git@github.com:"]
     # Use SSH for GitHub instead of HTTPS
-    insteadOf = https://github.com/
 
 [filter "lfs"]
     # Git LFS configuration
