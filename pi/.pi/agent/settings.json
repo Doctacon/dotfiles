@@ -1,0 +1,17 @@
+{
+  "theme": "light-owl-orange-readable",
+  "showHardwareCursor": true,
+  "lastChangelogVersion": "0.75.4",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "extensions": [
+    "extensions/vertex-anthropic"
+  ],
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "../../Code/personal/agent-loom/loom-core",
+    "../../Code/personal/agent-loom/loom-playbooks",
+    "npm:pi-web-access"
+  ]
+}

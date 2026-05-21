@@ -3,12 +3,17 @@
 # Documentation: https://ghostty.org/docs/config
 
 # Font configuration
-font-family = "Fira Code"
+font-family = "IBM Plex Mono"
 font-size = 14
 font-feature = +liga
 
 # Terminal appearance
 theme = "Light Owl"
+
+# Subtle visual effects: slow starfield + orange cursor trail/blaze
+custom-shader = /Users/crlough/.config/ghostty/shaders/slow-starfield.glsl
+custom-shader = /Users/crlough/.config/ghostty/shaders/cursor-trail-subtle.glsl
+custom-shader = /Users/crlough/.config/ghostty/shaders/cursor-blaze-subtle.glsl
 
 # Background and foreground colors (Dracula theme equivalent)
 # background = 282a36
@@ -16,12 +21,15 @@ theme = "Light Owl"
 
 # Cursor configuration
 cursor-style = block
-# cursor-color = f81ce5
-# cursor-text = 000000
+cursor-style-blink = true
+cursor-color = f97316
+cursor-text = 000000
 
 # Window appearance
-window-padding-x = 14
-window-padding-y = 12
+window-padding-x = 10
+window-padding-y = 8
+background-opacity = 0.94
+background-blur-radius = 20
 
 # Scrollback
 scrollback-limit = 10000

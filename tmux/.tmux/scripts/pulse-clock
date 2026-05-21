@@ -1,0 +1,16 @@
+#!/bin/sh
+
+colors="#f97316 #fb923c #fdba74 #fb923c #f97316 #4876d6"
+second=$(date +%S)
+idx=$((10#$second % 6))
+set -- $colors
+color="#f97316"
+case "$idx" in
+  0) color="$1" ;;
+  1) color="$2" ;;
+  2) color="$3" ;;
+  3) color="$4" ;;
+  4) color="$5" ;;
+  5) color="$6" ;;
+esac
+printf '#[fg=%s]#[bold]%s' "$color" "$(date '+%d/%m %H:%M:%S')"

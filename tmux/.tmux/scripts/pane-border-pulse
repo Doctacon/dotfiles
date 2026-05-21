@@ -1,0 +1,23 @@
+#!/bin/sh
+
+pidfile="${TMPDIR:-/tmp}/tmux-pane-border-pulse-${UID:-$(id -u)}.pid"
+
+if [ -f "$pidfile" ]; then
+  oldpid=$(cat "$pidfile" 2>/dev/null || true)
+  if [ -n "$oldpid" ] && kill -0 "$oldpid" 2>/dev/null; then
+    exit 0
+  fi
+fi
+
+echo $$ > "$pidfile"
+trap 'rm -f "$pidfile"; tmux set -g pane-active-border-style "fg=#f97316 bg=#fbfbff" 2>/dev/null' EXIT INT TERM
+
+# Warm orange-only breathing ramp: dim -> glow -> dim.
+colors="#fdba74 #fb923c #f97316 #ea580c #f97316 #fb923c #fdba74 #fed7aa"
+
+while tmux has-session 2>/dev/null; do
+  for color in $colors; do
+    tmux set -g pane-active-border-style "fg=$color bg=#fbfbff" 2>/dev/null || exit 0
+    sleep 0.42
+  done
+done
