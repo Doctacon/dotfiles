@@ -29,14 +29,14 @@
   "model": "zai-coding-plan/glm-5.1",
   "small_model": "zai-coding-plan/glm-5.1",
   "mcp": {
-     "socraticode": {
+    "socraticode": {
       "type": "local",
-      "command": ["npx", "-y", "socraticode"],
+      "command": [
+        "npx",
+        "-y",
+        "socraticode"
+      ],
       "enabled": true
-    },
-    "MotherDuck": {
-      "type": "remote",
-      "url": "https://api.motherduck.com/mcp"
     }
   },
   "share": "disabled",
