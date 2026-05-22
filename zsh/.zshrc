@@ -50,6 +50,31 @@ alias gp='git push'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
 
+# Zsh global aliases: expand anywhere in a command line.
+# Examples: `git log --oneline L`, `docker ps J`, `rg TODO C`.
+alias -g G='| grep'
+alias -g R='| rg'
+alias -g J='| jq'
+alias -g L='| less -R'
+alias -g C='| pbcopy'
+alias -g H='| head'
+alias -g T='| tail'
+
+# Zsh suffix aliases: type a file path directly to open it with the right tool.
+alias -s md=hx
+alias -s markdown=hx
+alias -s json=hx
+alias -s toml=hx
+alias -s yaml=hx
+alias -s yml=hx
+alias -s txt=hx
+alias -s png=open
+alias -s jpg=open
+alias -s jpeg=open
+alias -s gif=open
+alias -s webp=open
+alias -s pdf=open
+
 # Environment variables
 export EDITOR='hx'  # Set helix as default editor
 export VISUAL='hx'
@@ -59,9 +84,26 @@ export PAGER='less'
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 
-# Prompt customization (simple and clean)
-# For more advanced prompts, consider using starship or powerlevel10k
-PROMPT='%F{blue}%n@%m%f:%F{cyan}%~%f$ '
+# Prompt customization - Light Owl / Ghostty orange + teal
+# 37 = teal, 73 = soft cyan-teal, 202 = ember orange, 103 = muted lavender-gray.
+setopt prompt_subst
+
+prompt_git_info() {
+    local branch dirty
+    branch=$(GIT_OPTIONAL_LOCKS=0 git rev-parse --abbrev-ref HEAD 2>/dev/null) || return 0
+    [[ "$branch" == "HEAD" ]] && branch=$(GIT_OPTIONAL_LOCKS=0 git rev-parse --short HEAD 2>/dev/null)
+
+    if ! GIT_OPTIONAL_LOCKS=0 git diff --quiet --ignore-submodules -- 2>/dev/null || \
+       ! GIT_OPTIONAL_LOCKS=0 git diff --cached --quiet --ignore-submodules -- 2>/dev/null || \
+       [[ -n "$(GIT_OPTIONAL_LOCKS=0 git ls-files --others --exclude-standard 2>/dev/null | head -n 1)" ]]; then
+        dirty="*"
+        print -r -- " %F{202} ${branch}${dirty}%f"
+    else
+        print -r -- " %F{37} ${branch}%f"
+    fi
+}
+
+PROMPT='%F{37}%n%f:%F{73}%2~%f$(prompt_git_info) %F{202}❯%f ' 
 
 # Functions
 mkcd() {

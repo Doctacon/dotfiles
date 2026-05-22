@@ -19,5 +19,5 @@ fi
 if [ "$dirty" -eq 1 ]; then
   printf '#[fg=#f97316] %s*' "$branch"
 else
-  printf '#[fg=#4f8f35] %s' "$branch"
+  printf '#[fg=#0f766e] %s' "$branch"
 fi

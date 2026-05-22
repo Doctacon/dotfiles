@@ -1,6 +1,8 @@
 #!/bin/sh
 
 pidfile="${TMPDIR:-/tmp}/tmux-pane-border-pulse-${UID:-$(id -u)}.pid"
+soft_border="#f6c8a8"
+bg="#fbfbff"
 
 if [ -f "$pidfile" ]; then
   oldpid=$(cat "$pidfile" 2>/dev/null || true)
@@ -10,14 +12,17 @@ if [ -f "$pidfile" ]; then
 fi
 
 echo $$ > "$pidfile"
-trap 'rm -f "$pidfile"; tmux set -g pane-active-border-style "fg=#f97316 bg=#fbfbff" 2>/dev/null' EXIT INT TERM
+trap 'rm -f "$pidfile"; tmux set -g pane-border-style "fg=#f6c8a8 bg=#fbfbff" 2>/dev/null; tmux set -g pane-active-border-style "fg=#f97316 bg=#fbfbff" 2>/dev/null' EXIT INT TERM
 
-# Warm orange-only breathing ramp: dim -> glow -> dim.
-colors="#fdba74 #fb923c #f97316 #ea580c #f97316 #fb923c #fdba74 #fed7aa"
+# Slow warm-orange breathing ramp for the active pane border.
+# Crescendo: dark burnt orange -> vivid orange -> pale ember.
+# Decrescendo: pale ember -> vivid orange -> dark burnt orange.
+colors="#7c2d12 #9a3412 #c2410c #ea580c #f97316 #fb923c #fdba74 #fed7aa #fdba74 #fb923c #f97316 #ea580c #c2410c #9a3412 #7c2d12"
 
 while tmux has-session 2>/dev/null; do
+  tmux set -g pane-border-style "fg=$soft_border bg=$bg" 2>/dev/null || exit 0
   for color in $colors; do
-    tmux set -g pane-active-border-style "fg=$color bg=#fbfbff" 2>/dev/null || exit 0
-    sleep 0.42
+    tmux set -g pane-active-border-style "fg=$color bg=$bg" 2>/dev/null || exit 0
+    sleep 0.55
   done
 done

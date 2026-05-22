@@ -35,6 +35,7 @@ brew "zoxide"
 brew "zsh"
 brew "gh"
 
+cask "font-ibm-plex-mono"
 cask "font-symbols-only-nerd-font"
 cask "gcloud-cli"
 cask "gitkraken-cli"

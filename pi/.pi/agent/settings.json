@@ -12,6 +12,7 @@
     "npm:pi-mcp-adapter",
     "../../Code/personal/agent-loom/loom-core",
     "../../Code/personal/agent-loom/loom-playbooks",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:@juicesharp/rpiv-ask-user-question"
   ]
 }

@@ -3,7 +3,7 @@
 idx_text=${1:-1}
 name=${2:-window}
 flags=${3:-}
-colors="#f97316 #fb923c #fdba74 #fb923c #f97316 #4876d6"
+colors="#ea580c #f97316 #fb923c #fdba74 #fb923c #f97316"
 second=$(date +%S)
 idx=$((10#$second % 6))
 set -- $colors
