@@ -78,7 +78,7 @@ keybind = super+f=start_search
 keybind = super+g=navigate_search:next
 keybind = super+shift+g=navigate_search:previous
 keybind = super+shift+f=end_search
-keybind = escape=end_search
+keybind = unconsumed:escape=end_search
 keybind = super+shift+p=toggle_command_palette
 
 keybind = cmd+t=new_tab
