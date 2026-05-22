@@ -1,0 +1,49 @@
+#!/bin/sh
+
+pane_id=${1:-}
+safe_pane=$(printf '%s' "$pane_id" | tr -c 'A-Za-z0-9_' '_')
+if [ -n "$safe_pane" ]; then
+  statefile="${HOME}/.cache/tmux-shell-command-state-${safe_pane}"
+else
+  statefile="${HOME}/.cache/tmux-shell-command-state"
+fi
+
+[ -f "$statefile" ] || exit 0
+
+# Format:
+#   running<TAB>start_epoch<TAB>command
+#   done<TAB>expires_epoch<TAB>exit_code<TAB>elapsed_seconds<TAB>command
+IFS='	' read -r state a b c command < "$statefile" || exit 0
+now=$(date +%s)
+
+case "$state" in
+  running)
+    start="$a"
+    [ -n "$start" ] || exit 0
+    elapsed=$((now - start))
+    mins=$((elapsed / 60))
+    secs=$((elapsed % 60))
+    short=$(printf '%s' "$b" | tr '\n' ' ' | cut -c 1-26)
+    if [ "$mins" -gt 0 ]; then
+      printf '#[fg=#f97316]❯ #[fg=#8f8aa3]%s #[fg=#f97316]%dm%02ds' "$short" "$mins" "$secs"
+    else
+      printf '#[fg=#f97316]❯ #[fg=#8f8aa3]%s #[fg=#f97316]%ds' "$short" "$secs"
+    fi
+    ;;
+  done)
+    expires="$a"
+    [ -n "$expires" ] || exit 0
+    if [ "$expires" -le "$now" ] 2>/dev/null; then
+      rm -f "$statefile" 2>/dev/null || true
+      exit 0
+    fi
+    exit_code="$b"
+    elapsed="$c"
+    short=$(printf '%s' "$command" | tr '\n' ' ' | cut -c 1-26)
+    if [ "$exit_code" = "0" ]; then
+      printf '#[fg=#0f766e]✓ #[fg=#8f8aa3]%s #[fg=#0f766e]%ss' "$short" "$elapsed"
+    else
+      printf '#[fg=#dc2626]✗ %s #[fg=#8f8aa3]%s #[fg=#dc2626]%ss' "$exit_code" "$short" "$elapsed"
+    fi
+    ;;
+esac

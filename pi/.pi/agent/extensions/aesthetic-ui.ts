@@ -1,3 +1,5 @@
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import { CustomEditor, type ExtensionAPI, type ExtensionContext, type WorkingIndicatorOptions } from "@earendil-works/pi-coding-agent";
 import { matchesKey } from "@earendil-works/pi-tui";
 
@@ -38,6 +40,19 @@ let historyIndex: number | undefined;
 
 const TOOL_STATUS_KEY = "aesthetic-tool-theme";
 const activeTools = new Map<string, string>();
+const AGENT_RING_STATE_PATH = path.join(process.env.HOME ?? process.cwd(), ".cache", "tmux-agent-ring-state");
+let attentionUntil = 0;
+
+function setAgentRingState(state: "working" | "waiting" | "blocked" | "error", ttlSeconds?: number): void {
+	if (!process.env.TMUX) return;
+	try {
+		mkdirSync(path.dirname(AGENT_RING_STATE_PATH), { recursive: true });
+		const expires = ttlSeconds ? Math.floor(Date.now() / 1000) + ttlSeconds : "";
+		writeFileSync(AGENT_RING_STATE_PATH, `${state} ${expires}\n`);
+	} catch {
+		// Aesthetic-only integration; never break Pi startup or tool execution.
+	}
+}
 
 type ToolCategory = "read" | "search" | "edit" | "bash" | "mcp" | "ask" | "other";
 
@@ -109,6 +124,7 @@ export default function (pi: ExtensionAPI) {
 	};
 
 	pi.on("session_start", async (_event, ctx) => {
+		setAgentRingState("waiting");
 		for (const entry of ctx.sessionManager.getEntries()) {
 			if (entry.type !== "message" || entry.message.role !== "user") continue;
 			const text = entry.message.content
@@ -125,8 +141,18 @@ export default function (pi: ExtensionAPI) {
 	pi.on("input", async (event) => {
 		const text = event.text.trim();
 		if (!text) return;
+		setAgentRingState("working");
 		if (promptHistory[promptHistory.length - 1] !== text) promptHistory.push(text);
 		historyIndex = undefined;
+	});
+
+	pi.on("agent_start", async () => {
+		setAgentRingState("working");
+	});
+
+	pi.on("agent_end", async () => {
+		if (Date.now() < attentionUntil) return;
+		setAgentRingState("waiting");
 	});
 
 	pi.on("tool_execution_start", async (event, ctx) => {
@@ -137,10 +163,15 @@ export default function (pi: ExtensionAPI) {
 	pi.on("tool_execution_end", async (event, ctx) => {
 		activeTools.delete(event.toolCallId);
 		ctx.ui.setStatus(TOOL_STATUS_KEY, renderToolStatus());
+		if (event.isError) {
+			attentionUntil = Date.now() + 12_000;
+			setAgentRingState("error", 12);
+		}
 	});
 
 	pi.on("session_shutdown", async (_event, ctx) => {
 		activeTools.clear();
+		setAgentRingState("waiting");
 		ctx.ui.setStatus(TOOL_STATUS_KEY, undefined);
 	});
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 pidfile="${TMPDIR:-/tmp}/tmux-pane-border-pulse-${UID:-$(id -u)}.pid"
-soft_border="#f6c8a8"
+statefile="${HOME}/.cache/tmux-agent-ring-state"
 bg="#fbfbff"
 
 if [ -f "$pidfile" ]; then
@@ -14,14 +14,65 @@ fi
 echo $$ > "$pidfile"
 trap 'rm -f "$pidfile"; tmux set -g pane-border-style "fg=#f6c8a8 bg=#fbfbff" 2>/dev/null; tmux set -g pane-active-border-style "fg=#f97316 bg=#fbfbff" 2>/dev/null' EXIT INT TERM
 
-# Slow warm-orange breathing ramp for the active pane border.
-# Crescendo: dark burnt orange -> vivid orange -> pale ember.
-# Decrescendo: pale ember -> vivid orange -> dark burnt orange.
-colors="#7c2d12 #9a3412 #c2410c #ea580c #f97316 #fb923c #fdba74 #fed7aa #fdba74 #fb923c #f97316 #ea580c #c2410c #9a3412 #7c2d12"
+orange_soft="#f6c8a8"
+teal_soft="#b8efe4"
+red_soft="#fecaca"
+
+orange_colors="#7c2d12 #9a3412 #c2410c #ea580c #f97316 #fb923c #fdba74 #fed7aa #fdba74 #fb923c #f97316 #ea580c #c2410c #9a3412 #7c2d12"
+teal_colors="#0f766e #0d9488 #14b8a6 #5eead4 #99f6e4 #5eead4 #14b8a6 #0d9488 #0f766e"
+shell_colors="#92400e #b45309 #d97706 #f59e0b #fbbf24 #fde68a #fbbf24 #f59e0b #d97706 #b45309 #92400e"
+red_colors="#7f1d1d #991b1b #dc2626 #ef4444 #f97316 #ef4444 #dc2626 #991b1b #7f1d1d"
+
+read_state() {
+  state="working"
+  expires=""
+  if [ -f "$statefile" ]; then
+    read -r state expires < "$statefile" || state="working"
+  fi
+
+  case "$state" in
+    waiting|working|shell-running|blocked|error) ;;
+    *) state="working" ;;
+  esac
+
+  if [ -n "$expires" ]; then
+    now=$(date +%s)
+    if [ "$expires" -le "$now" ] 2>/dev/null; then
+      rm -f "$statefile" 2>/dev/null || true
+      state="waiting"
+      expires=""
+    fi
+  fi
+}
 
 while tmux has-session 2>/dev/null; do
-  tmux set -g pane-border-style "fg=$soft_border bg=$bg" 2>/dev/null || exit 0
+  read_state
+  cycle_state="$state"
+  case "$state" in
+    waiting)
+      soft="$teal_soft"
+      colors="$teal_colors"
+      ;;
+    shell-running)
+      soft="#fde68a"
+      colors="$shell_colors"
+      ;;
+    blocked|error)
+      soft="$red_soft"
+      colors="$red_colors"
+      ;;
+    *)
+      soft="$orange_soft"
+      colors="$orange_colors"
+      ;;
+  esac
+
+  tmux set -g pane-border-style "fg=$soft bg=$bg" 2>/dev/null || exit 0
   for color in $colors; do
+    read_state
+    if [ "$state" != "$cycle_state" ]; then
+      break
+    fi
     tmux set -g pane-active-border-style "fg=$color bg=$bg" 2>/dev/null || exit 0
     sleep 0.55
   done

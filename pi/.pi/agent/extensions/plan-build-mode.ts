@@ -1,9 +1,23 @@
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import type { ExtensionAPI, ExtensionContext, WorkingIndicatorOptions } from "@earendil-works/pi-coding-agent";
 
 type AgentMode = "plan" | "build";
 
 const STATUS_KEY = "plan-build-mode";
+const AGENT_RING_STATE_PATH = path.join(process.env.HOME ?? process.cwd(), ".cache", "tmux-agent-ring-state");
 let mode: AgentMode = "build";
+
+function setAgentRingState(state: "working" | "waiting" | "blocked" | "error", ttlSeconds?: number): void {
+	if (!process.env.TMUX) return;
+	try {
+		mkdirSync(path.dirname(AGENT_RING_STATE_PATH), { recursive: true });
+		const expires = ttlSeconds ? Math.floor(Date.now() / 1000) + ttlSeconds : "";
+		writeFileSync(AGENT_RING_STATE_PATH, `${state} ${expires}\n`);
+	} catch {
+		// Aesthetic-only tmux integration; never block Pi behavior.
+	}
+}
 
 function modeLabel(): string {
 	return mode === "plan" ? "PLAN mode" : "BUILD mode";
@@ -146,6 +160,7 @@ export default function (pi: ExtensionAPI) {
 
 		if (event.toolName === "write" || event.toolName === "edit") {
 			const reason = `✎ PLAN protected this workspace: ${event.toolName} is blocked. Press Tab or run /build to switch to ⚒ BUILD.`;
+			setAgentRingState("blocked", 12);
 			if (ctx.hasUI) ctx.ui.notify(reason, "warning");
 			return {
 				block: true,
@@ -158,6 +173,7 @@ export default function (pi: ExtensionAPI) {
 			const command = typeof input.command === "string" ? input.command : "";
 			if (!isProbablyReadOnlyShell(command)) {
 				const reason = "✎ PLAN protected this workspace: mutating shell commands are blocked. Press Tab or run /build to switch to ⚒ BUILD.";
+				setAgentRingState("blocked", 12);
 				if (ctx.hasUI) ctx.ui.notify(reason, "warning");
 				return {
 					block: true,

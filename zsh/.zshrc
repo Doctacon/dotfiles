@@ -105,6 +105,98 @@ prompt_git_info() {
 
 PROMPT='%F{37}%n%f:%F{73}%2~%f$(prompt_git_info) %F{202}❯%f ' 
 
+# zsh -> tmux command lifecycle bridge.
+# Makes long-running foreground commands visible through the same breathing pane-border mood system.
+_tmux_command_state_file="${HOME}/.cache/tmux-agent-ring-state"
+_tmux_shell_status_file="${HOME}/.cache/tmux-shell-command-state"
+if [[ -n "${TMUX_PANE:-}" ]]; then
+    _tmux_shell_status_file="${HOME}/.cache/tmux-shell-command-state-${TMUX_PANE//[^A-Za-z0-9_]/_}"
+fi
+_tmux_command_started_at=0
+_tmux_command_text=""
+_tmux_command_checkpoint_token=""
+_tmux_command_checkpoint_file="${_tmux_shell_status_file}.checkpoint"
+: ${ZSH_COMMAND_CHECKPOINT_SECONDS:=5}
+
+_tmux_format_duration() {
+    local elapsed=$1 mins secs
+    mins=$(( elapsed / 60 ))
+    secs=$(( elapsed % 60 ))
+    if (( mins > 0 )); then
+        print -r -- "${mins}m ${secs}s"
+    else
+        print -r -- "${secs}s"
+    fi
+}
+
+_tmux_prompt_escape() {
+    print -r -- "${1//%/%%}"
+}
+
+_tmux_set_command_state() {
+    [[ -n "${TMUX:-}" ]] || return 0
+    mkdir -p "${_tmux_command_state_file:h}" 2>/dev/null || return 0
+    local state="$1" ttl="${2:-}" expires=""
+    if [[ -n "$ttl" ]]; then
+        expires=$(( EPOCHSECONDS + ttl ))
+    fi
+    print -r -- "$state $expires" >| "$_tmux_command_state_file" 2>/dev/null || true
+}
+
+_tmux_command_preexec() {
+    _tmux_command_started_at=$EPOCHSECONDS
+    _tmux_command_text="$1"
+    _tmux_command_checkpoint_token="${EPOCHSECONDS}:${$}:${RANDOM}"
+    local start_clock="${(%):-%D{%H:%M:%S}}"
+    local command_line="${_tmux_command_text%%$'\n'*}"
+    command_line="$(_tmux_prompt_escape "$command_line")"
+
+    _tmux_set_command_state "shell-running"
+    [[ -n "${TMUX:-}" ]] && printf '%s\t%s\t%s\n' "running" "$_tmux_command_started_at" "${_tmux_command_text%%$'\n'*}" >| "$_tmux_shell_status_file" 2>/dev/null || true
+    printf '%s\n' "$_tmux_command_checkpoint_token" >| "$_tmux_command_checkpoint_file" 2>/dev/null || true
+
+    {
+        sleep "$ZSH_COMMAND_CHECKPOINT_SECONDS"
+        if [[ -f "$_tmux_command_checkpoint_file" && "$(<"$_tmux_command_checkpoint_file")" == "$_tmux_command_checkpoint_token" ]]; then
+            print -P -- "\n%F{202}╭─%f %F{103}started ${start_clock}%f %F{202}·%f %F{103}${command_line}%f" > /dev/tty 2>/dev/null || true
+        fi
+    } &!
+}
+
+_tmux_command_precmd() {
+    local exit_code=$? elapsed=0
+    if (( _tmux_command_started_at > 0 )); then
+        elapsed=$(( EPOCHSECONDS - _tmux_command_started_at ))
+        if (( exit_code != 0 )); then
+            _tmux_set_command_state "error" 8
+        else
+            _tmux_set_command_state "waiting"
+        fi
+        [[ -n "${TMUX:-}" ]] && printf '%s\t%s\t%s\t%s\t%s\n' "done" "$(( EPOCHSECONDS + 8 ))" "$exit_code" "$elapsed" "${_tmux_command_text%%$'\n'*}" >| "$_tmux_shell_status_file" 2>/dev/null || true
+
+        if (( elapsed >= ZSH_COMMAND_CHECKPOINT_SECONDS )); then
+            local duration="$(_tmux_format_duration "$elapsed")"
+            local finished_clock="${(%):-%D{%H:%M:%S}}"
+            if (( exit_code == 0 )); then
+                print -P "%F{202}╰─%f %F{37}finished ${finished_clock}%f %F{202}·%f %F{37}exit 0%f %F{202}· took ${duration}%f"
+            else
+                print -P "%F{202}╰─%f %F{196}finished ${finished_clock}%f %F{202}·%f %F{196}exit ${exit_code}%f %F{202}· after ${duration}%f"
+            fi
+        fi
+    else
+        _tmux_set_command_state "waiting"
+        [[ -n "${TMUX:-}" ]] && rm -f "$_tmux_shell_status_file" 2>/dev/null || true
+    fi
+    rm -f "$_tmux_command_checkpoint_file" 2>/dev/null || true
+    _tmux_command_started_at=0
+    _tmux_command_text=""
+    _tmux_command_checkpoint_token=""
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _tmux_command_preexec
+add-zsh-hook precmd _tmux_command_precmd
+
 # Functions
 mkcd() {
     mkdir -p "$1" && cd "$1"
@@ -218,6 +310,63 @@ eval "$(zoxide init zsh)"
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
 fi
+
+# Natural-language shell command drafts with Pi.
+# Type: ?? find my last modified .png file
+# Press Enter, and Pi replaces it with a proposed command for you to review/edit.
+# It never auto-runs the generated command; press Enter again if you approve it.
+_pi_shell_command_from_nl() {
+    emulate -L zsh
+    setopt localoptions no_nomatch
+
+    if [[ "$BUFFER" != '?? '* ]]; then
+        zle .accept-line
+        return
+    fi
+
+    local request="${BUFFER#\?\? }"
+    request="$(print -r -- "$request" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+    if [[ -z "$request" ]]; then
+        zle -M "Usage: ?? describe the shell command you want"
+        return
+    fi
+
+    if ! command -v pi >/dev/null 2>&1; then
+        zle -M "pi not found; cannot draft command"
+        return
+    fi
+
+    zle -M "Pi drafting a safe shell command…"
+
+    local system_prompt user_prompt output pi_exit_status
+    system_prompt='You convert a natural-language request into a safe zsh shell command for macOS. Output exactly one command and nothing else: no markdown, no code fences, no explanation. Never execute anything. Prefer non-destructive preview/list commands for destructive requests. If a request is dangerous or unclear, output a safe echo command explaining what must be reviewed. Prefer commands compatible with zsh on macOS. Use the current working directory context when relevant.'
+    user_prompt="CWD: $PWD
+Request: $request"
+
+    output=$(pi -p --no-session --no-tools --no-extensions --no-skills --no-prompt-templates --no-context-files --thinking minimal --system-prompt "$system_prompt" "$user_prompt" 2>/tmp/pi-zsh-command.err)
+    pi_exit_status=$?
+
+    if [[ $pi_exit_status -ne 0 || -z "${output//[[:space:]]/}" ]]; then
+        local err="$(tail -n 1 /tmp/pi-zsh-command.err 2>/dev/null)"
+        zle -M "Pi command draft failed${err:+: $err}"
+        return
+    fi
+
+    # Be forgiving if the model still emits fences or surrounding prose.
+    output="${output//$'\r'/}"
+    output="${output#\`\`\`zsh$'\n'}"
+    output="${output#\`\`\`bash$'\n'}"
+    output="${output#\`\`\`sh$'\n'}"
+    output="${output#\`\`\`$'\n'}"
+    output="${output%$'\n'\`\`\`}"
+    output="$(print -r -- "$output" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+
+    BUFFER="$output"
+    CURSOR=${#BUFFER}
+    zle -M "Command drafted; review/edit, then press Enter to run"
+    zle redisplay
+}
+zle -N accept-line _pi_shell_command_from_nl
 
 # Extract various archive formats
 extract() {

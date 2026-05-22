@@ -9,6 +9,11 @@
         "-y",
         "socraticode"
       ]
+    },
+    "motherduck": {
+      "url": "https://api.motherduck.com/mcp",
+      "auth": "oauth",
+      "lifecycle": "lazy"
     }
   }
 }

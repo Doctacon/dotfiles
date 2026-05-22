@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Print a tiny tmux-formatted git mood dot for pane border titles.
+# teal = clean repo, orange = dirty repo, muted = not a repo/detached unknown.
+
+dir=$1
+[ -n "$dir" ] || exit 0
+cd "$dir" 2>/dev/null || exit 0
+
+GIT_OPTIONAL_LOCKS=0 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
+  printf '#[fg=#c9c5d6]•'
+  exit 0
+}
+
+dirty=0
+GIT_OPTIONAL_LOCKS=0 git diff --quiet --ignore-submodules -- 2>/dev/null || dirty=1
+GIT_OPTIONAL_LOCKS=0 git diff --cached --quiet --ignore-submodules -- 2>/dev/null || dirty=1
+if [ "$dirty" -eq 0 ] && [ -n "$(GIT_OPTIONAL_LOCKS=0 git ls-files --others --exclude-standard 2>/dev/null | head -n 1)" ]; then
+  dirty=1
+fi
+
+if [ "$dirty" -eq 1 ]; then
+  printf '#[fg=#f97316]●'
+else
+  printf '#[fg=#0f766e]●'
+fi
