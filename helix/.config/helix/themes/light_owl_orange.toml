@@ -1,0 +1,122 @@
+# Light Owl Orange for Helix — aligned with Ghostty, tmux, Pi, and Yazi.
+# The scope mappings inherit Catppuccin's broad Helix coverage while the
+# palette and key UI surfaces use the Light Owl/orange system palette.
+
+inherits = "catppuccin_mocha"
+
+"ui.background" = { fg = "ink", bg = "paper" }
+"ui.linenr" = { fg = "faint" }
+"ui.linenr.selected" = { fg = "orange", modifiers = ["bold"] }
+
+"ui.statusline" = { fg = "muted", bg = "panel_soft" }
+"ui.statusline.inactive" = { fg = "dim", bg = "panel" }
+"ui.statusline.normal" = { fg = "paper", bg = "orange", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "paper", bg = "green", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "paper", bg = "violet", modifiers = ["bold"] }
+
+"ui.popup" = { fg = "ink", bg = "panel_soft" }
+"ui.window" = { fg = "faint" }
+"ui.help" = { fg = "muted", bg = "panel_soft" }
+
+"ui.bufferline" = { fg = "muted", bg = "panel" }
+"ui.bufferline.active" = { fg = "orange", bg = "paper", underline = { color = "orange", style = "line" } }
+"ui.bufferline.background" = { bg = "panel_soft" }
+
+"ui.text" = "ink"
+"ui.text.focus" = { fg = "ink", bg = "selected", modifiers = ["bold"] }
+"ui.text.inactive" = { fg = "dim" }
+"ui.text.directory" = { fg = "blue", modifiers = ["bold"] }
+
+"ui.virtual" = "dim"
+"ui.virtual.ruler" = { bg = "panel" }
+"ui.virtual.indent-guide" = "faint"
+"ui.virtual.inlay-hint" = { fg = "dim", bg = "panel" }
+"ui.virtual.jump-label" = { fg = "orange", modifiers = ["bold"] }
+
+"ui.selection" = { bg = "selected" }
+"ui.highlight" = { bg = "panel_soft", modifiers = ["bold"] }
+
+"ui.cursor" = { fg = "paper", bg = "orange_soft" }
+"ui.cursor.primary" = { fg = "paper", bg = "orange" }
+"ui.cursor.match" = { fg = "orange", modifiers = ["bold"] }
+"ui.cursor.primary.normal" = { fg = "paper", bg = "orange" }
+"ui.cursor.primary.insert" = { fg = "paper", bg = "green" }
+"ui.cursor.primary.select" = { fg = "paper", bg = "violet" }
+"ui.cursor.normal" = { fg = "paper", bg = "orange_soft" }
+"ui.cursor.insert" = { fg = "paper", bg = "green_soft" }
+"ui.cursor.select" = { fg = "paper", bg = "violet_soft" }
+"ui.cursorline.primary" = { bg = "cursorline" }
+
+"ui.menu" = { fg = "muted", bg = "panel_soft" }
+"ui.menu.selected" = { fg = "ink", bg = "selected", modifiers = ["bold"] }
+
+"comment" = { fg = "dim", modifiers = ["italic"] }
+"keyword" = "violet"
+"keyword.control.conditional" = { fg = "violet", modifiers = ["italic"] }
+"function" = "blue"
+"function.macro" = "violet"
+"string" = "cyan"
+"constant" = "orange"
+"operator" = "orange"
+"punctuation" = "muted"
+"type" = "yellow"
+"variable" = "ink"
+"variable.parameter" = { fg = "red", modifiers = ["italic"] }
+
+"diff.plus" = "green"
+"diff.minus" = "red"
+"diff.delta" = "blue"
+
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "orange", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.hint" = { underline = { color = "cyan", style = "curl" } }
+
+error = "red"
+warning = "orange"
+info = "blue"
+hint = "cyan"
+
+[palette]
+rosewater = "#f97316"
+flamingo = "#d95468"
+pink = "#7c6dc7"
+mauve = "#7c6dc7"
+red = "#d95468"
+maroon = "#d95468"
+peach = "#f97316"
+yellow = "#b58900"
+green = "#4f8f35"
+teal = "#2aa198"
+sky = "#2aa198"
+sapphire = "#1f5f88"
+blue = "#4876d6"
+lavender = "#7c6dc7"
+text = "#403f53"
+subtext1 = "#6c6f85"
+subtext0 = "#9893a5"
+overlay2 = "#9893a5"
+overlay1 = "#b8b4c7"
+overlay0 = "#d8d5e4"
+surface2 = "#dbeafe"
+surface1 = "#e5e7f2"
+surface0 = "#f0f2fa"
+base = "#fbfbff"
+mantle = "#f6f8ff"
+crust = "#f0f2fa"
+
+paper = "#fbfbff"
+panel = "#f6f8ff"
+panel_soft = "#f0f2fa"
+selected = "#dbeafe"
+ink = "#403f53"
+muted = "#6c6f85"
+dim = "#9893a5"
+faint = "#b8b4c7"
+orange = "#f97316"
+orange_soft = "#fb923c"
+cyan = "#2aa198"
+green_soft = "#6aa84f"
+violet = "#7c6dc7"
+violet_soft = "#9b8ee6"
+cursorline = "#f0f4ff"

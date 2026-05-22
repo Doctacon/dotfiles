@@ -1,7 +1,7 @@
 # Helix Editor Configuration
 # Documentation: https://docs.helix-editor.com/configuration.html
 
-theme = "catppuccin_latte"  # Popular theme, change to your preference
+theme = "light_owl_orange"  # Light Owl + orange accent theme shared with Ghostty/tmux/Pi/Yazi
 
 [editor]
 # Line number display
