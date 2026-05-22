@@ -1,3 +1,4 @@
+brew "atuin"
 brew "awscli"
 brew "bazelisk"
 brew "colima"

@@ -214,6 +214,11 @@ zclaude() {
 # zoxide init
 eval "$(zoxide init zsh)"
 
+# Atuin local shell history. Ctrl+R opens fuzzy history search; Up Arrow remains normal zsh history.
+if command -v atuin >/dev/null 2>&1; then
+    eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
+fi
+
 # Extract various archive formats
 extract() {
     if [ -f $1 ]; then
