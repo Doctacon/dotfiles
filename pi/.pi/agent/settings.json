@@ -1,18 +1,19 @@
 {
   "theme": "light-owl-orange-readable",
   "showHardwareCursor": true,
-  "lastChangelogVersion": "0.75.4",
+  "lastChangelogVersion": "0.75.5",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "extensions": [
     "extensions/vertex-anthropic"
   ],
-  "defaultThinkingLevel": "high",
+  "defaultThinkingLevel": "xhigh",
   "packages": [
     "npm:pi-mcp-adapter",
     "../../Code/personal/agent-loom/loom-core",
     "../../Code/personal/agent-loom/loom-playbooks",
     "npm:pi-web-access",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "../../Code/personal/pi-flight-recorder"
   ]
 }

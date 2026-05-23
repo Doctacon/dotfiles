@@ -7,8 +7,11 @@ My personal development environment configuration files.
 - **[ZSH](#zsh)** - Shell with custom aliases, functions, and environment setup
 - **[Git](#git)** - Version control with useful aliases and better defaults
 - **[Helix](#helix)** - Modern text editor with LSP support and git blame integration
-- **[tmux](#tmux)** - Terminal multiplexer with vim-style navigation
-- **[Hyper](#hyper)** - Terminal emulator with custom theme
+- **[tmux](#tmux)** - Terminal multiplexer with vim-style navigation and popups
+- **[Ghostty](#ghostty)** - Terminal emulator with Light Owl styling and shaders
+- **[Yazi](#yazi)** - Terminal file manager launched from tmux popups
+- **[LazyGit](#lazygit)** - Terminal Git UI with delta and difftastic pagers
+- **[Pi](#pi)** - Coding-agent TUI configured with matching theme/keybindings
 
 ## 📁 Directory Structure
 
@@ -24,9 +27,20 @@ dotfiles/
 │   └── .config/helix/
 │       └── config.toml # Helix editor settings
 ├── tmux/
-│   └── .tmux.conf      # tmux configuration
-├── hyper/
-    └── .hyper.js       # Hyper terminal configuration
+│   ├── .tmux.conf      # tmux configuration
+│   └── .tmux/scripts/  # tmux status/pane helper scripts
+├── ghostty/
+│   └── .config/ghostty/config
+├── yazi/
+│   └── .config/yazi/
+├── lazygit/
+│   └── Library/Application Support/lazygit/config.yml
+├── atuin/
+│   └── .config/atuin/config.toml
+├── direnv/
+│   └── .config/direnv/direnv.toml
+├── pi/
+│   └── .pi/agent/
 ```
 
 ## 🚀 New Computer Setup
@@ -38,13 +52,10 @@ Setting up your development environment on a new Mac.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### 2. Install Essential Tools
+### 2. Install Bootstrap Tools
 ```bash
-# Core tools
-brew install git stow zsh tmux helix
-
-# Python tools
-brew install uv
+# Enough to clone this repo and link configs
+brew install git stow
 ```
 
 ### 3. Clone Your Dotfiles
@@ -58,26 +69,35 @@ git clone https://github.com/Doctacon/dotfiles.git
 cd dotfiles
 ```
 
-### 4. Link Everything with Stow
+### 4. Install Packages from Brewfile
 ```bash
-# Link all configs at once
-stow zsh git helix tmux
-
-# Or link individually if you prefer
-stow zsh    # Shell config
-stow git    # Git config
-stow helix  # Editor config
-stow tmux   # Terminal multiplexer
+brew bundle install --file Brewfile
 ```
 
-### 5. Install Python Language Servers for Helix
+### 5. Link Everything with Stow
+```bash
+# Link all configs at once
+stow --target="$HOME" zsh git helix tmux ghostty yazi lazygit atuin direnv pi
+
+# Or link individually if you prefer
+stow --target="$HOME" zsh      # Shell config
+stow --target="$HOME" git      # Git config
+stow --target="$HOME" helix    # Editor config
+stow --target="$HOME" tmux     # Terminal multiplexer
+stow --target="$HOME" ghostty  # Terminal emulator
+stow --target="$HOME" yazi     # Terminal file manager
+stow --target="$HOME" lazygit  # Terminal Git UI
+stow --target="$HOME" pi       # Coding-agent TUI
+```
+
+### 6. Install Python Language Servers for Helix
 ```bash
 # Install Python LSPs
 uv tool install pyright
 uv tool install ruff-lsp
 ```
 
-### 6. Set ZSH as Default Shell
+### 7. Set ZSH as Default Shell
 ```bash
 # Add homebrew zsh to allowed shells
 sudo sh -c "echo $(which zsh) >> /etc/shells"
@@ -86,7 +106,7 @@ sudo sh -c "echo $(which zsh) >> /etc/shells"
 chsh -s $(which zsh)
 ```
 
-### 7. Restart Terminal
+### 8. Restart Terminal
 Close and reopen your terminal, or run:
 ```bash
 source ~/.zshrc
@@ -104,6 +124,11 @@ git s
 
 # Test ripgrep
 rg "test"
+
+# Test lazygit + delta/difftastic stack
+lazygit --version
+delta --version
+difft --version
 ```
 
 ## 🏢 Work Machine Setup
@@ -156,19 +181,19 @@ This way you get all your dotfiles goodness while keeping sensitive work data se
 ### Basic Commands
 ```bash
 # Link configurations
-stow zsh                        # Link single package
-stow zsh git helix              # Link multiple packages
+stow --target="$HOME" zsh                        # Link single package
+stow --target="$HOME" zsh git helix              # Link multiple packages
 
 # Unlink configurations
-stow -D zsh                     # Remove single package
-stow -D zsh git helix           # Remove multiple packages
+stow --target="$HOME" -D zsh                     # Remove single package
+stow --target="$HOME" -D zsh git helix           # Remove multiple packages
 
 # Relink configurations (useful after updates)
-stow -R zsh                     # Relink single package
-stow -R -v zsh git helix        # Relink multiple with verbose output
+stow --target="$HOME" -R zsh                     # Relink single package
+stow --target="$HOME" -R -v zsh git helix        # Relink multiple with verbose output
 
 # Dry run (preview changes)
-stow -n -v zsh                  # See what would happen
+stow --target="$HOME" -n -v zsh                  # See what would happen
 ```
 
 ### Check Current Status
@@ -188,6 +213,8 @@ ls -la ~/.zshrc
 - Smart prompt with git integration
 - Extensive aliases for git, navigation, and common tasks
 - History with deduplication and sharing
+- fzf shell integration for file/directory pickers
+- Atuin local-first history search
 - Ripgrep aliases for data engineering (`rgs`, `rgpy`, `rgdata`, etc.)
 - Custom functions (`mkcd`, `extract`, `backup`, `gacp`)
 - Environment setup for development tools
@@ -205,6 +232,8 @@ ls -la ~/.zshrc
 - Helix as default editor
 - Global gitignore for common files
 - Better diff algorithms and merge conflict display
+- Delta as the default syntax-highlighting pager
+- Difftastic aliases for structural diffs (`git difft`, `git showt`)
 - Auto-prune on fetch
 - Rebase by default on pull
 - SSH preference for GitHub
@@ -220,7 +249,7 @@ ls -la ~/.zshrc
 ### Helix
 
 **Features:**
-- Catppuccin Mocha theme
+- Light Owl + orange accent theme
 - Relative line numbers
 - Git gutter indicators
 - Mouse support
@@ -249,15 +278,42 @@ ls -la ~/.zshrc
 - `Prefix r` - Reload config
 - `Prefix h/j/k/l` - Navigate panes
 - `Prefix H/J/K/L` - Resize panes
+- `Prefix p` - Open Pi in a popup
+- `Prefix B` - Open Yazi in a popup
+- `Prefix u` - Open LazyGit in a popup
 
-### Hyper
+### Yazi
 
 **Features:**
-- Fira Code font with ligatures
-- Dracula-inspired color scheme
-- WebGL renderer for performance
-- Custom tab styling
-- ZSH as default shell
+- Terminal file manager with Light Owl flavor
+- Shell escape keybinding (`!`) for opening a blocking shell in the current directory
+- Launched from tmux with `Prefix B`
+
+### LazyGit
+
+**Features:**
+- Terminal Git UI installed via Homebrew
+- Uses Delta as the first diff pager
+- Includes Difftastic as a second pager for syntax-aware diffs
+- Opens files in Helix via LazyGit's `helix` edit preset
+- Launched from tmux with `Prefix u` or from zsh with `lg`
+
+### Pi
+
+**Features:**
+- Light Owl orange readable theme
+- High default thinking level
+- Custom newline keybindings for the TUI input
+- Loom, web access, ask-user-question, and flight-recorder packages enabled
+
+### Ghostty
+
+**Features:**
+- IBM Plex Mono with ligatures
+- Light Owl theme shared with tmux, Helix, Yazi, and Pi
+- Subtle shader effects and orange cursor styling
+- macOS-native keybindings for tabs, splits, search, and font size
+- ZSH shell integration
 
 ## 🔧 Customization
 
@@ -278,7 +334,7 @@ Example for adding vim configuration:
 mkdir -p ~/Code/dotfiles/vim
 echo "set number" > ~/Code/dotfiles/vim/.vimrc
 cd ~/Code/dotfiles
-stow vim
+stow --target="$HOME" vim
 ```
 
 ## 🐛 Common Issues & Fixes

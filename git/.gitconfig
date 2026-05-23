@@ -23,8 +23,8 @@
     # Speed up commands involving untracked files such as `git status`
     untrackedCache = true
     
-    # Use delta for diffs (if installed)
-    # pager = delta
+    # Syntax-highlighting pager for git, diff, grep, and blame output
+    pager = delta
 
 [color]
     # Use colors in Git commands that are capable of colored output
@@ -78,6 +78,8 @@
     d = diff
     dc = diff --cached
     ds = diff --staged
+    difft = !GIT_EXTERNAL_DIFF=difft git diff
+    showt = !GIT_EXTERNAL_DIFF=difft git show --ext-diff
     
     # Pull in remote changes for the current repository and all its submodules
     p = pull --recurse-submodules
@@ -146,6 +148,12 @@
     
     # Use a better merge conflict style
     conflictstyle = diff3
+
+[delta]
+    light = true
+    line-numbers = true
+    navigate = true
+    side-by-side = false
 
 [diff]
     # Detect copies as well as renames

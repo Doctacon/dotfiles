@@ -1,0 +1,12 @@
+# LazyGit configuration
+# Docs: https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
+
+# Keep LazyGit aligned with the Light Owl terminal theme and Git's delta pager.
+git:
+  pagers:
+    - pager: delta --light --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+    - externalDiffCommand: difft --color=always
+
+# Helix is the default editor across these dotfiles.
+os:
+  editPreset: helix

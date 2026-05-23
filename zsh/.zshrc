@@ -49,6 +49,7 @@ alias gc='git commit'
 alias gp='git push'
 alias gd='git diff'
 alias gl='git log --oneline --graph --decorate'
+alias lg='lazygit'
 
 # Zsh global aliases: expand anywhere in a command line.
 # Examples: `git log --oneline L`, `docker ps J`, `rg TODO C`.
@@ -306,6 +307,11 @@ zclaude() {
 # zoxide init
 eval "$(zoxide init zsh)"
 
+# Fuzzy finder shell integration: Ctrl+T files, Alt-C directories; Atuin owns Ctrl+R below.
+if command -v fzf >/dev/null 2>&1; then
+    eval "$(fzf --zsh)"
+fi
+
 # Atuin local shell history. Ctrl+R opens fuzzy history search; Up Arrow remains normal zsh history.
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
@@ -409,7 +415,7 @@ alias rgc='rg --count'              # Count matches per file
 # Initialize tools (uncomment as needed)
 # eval "$(starship init zsh)"  # For starship prompt
 # eval "$(zoxide init zsh)"     # For zoxide (better cd)
-# eval "$(fzf --zsh)"          # For fzf fuzzy finder
+# fzf is initialized above with command existence checks.
 eval "$(direnv hook zsh)"     # For direnv environment management
 
 export PATH="$HOME/.local/bin:$PATH"

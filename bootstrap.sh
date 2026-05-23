@@ -80,7 +80,7 @@ if command -v stow &> /dev/null; then
         dirname="${dir%/}"
         if [[ ! "$dirname" =~ ^\. ]] && [[ "$dirname" != "scripts" ]] && [[ "$dirname" != "docs" ]]; then
             echo_info "Stowing $dirname..."
-            stow -v "$dirname" 2>/dev/null || echo_warn "Could not stow $dirname (may already exist)"
+            stow --target="$HOME" -v "$dirname" 2>/dev/null || echo_warn "Could not stow $dirname (may already exist)"
         fi
     done
 else
