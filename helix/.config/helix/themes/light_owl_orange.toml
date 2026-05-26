@@ -40,11 +40,11 @@ inherits = "catppuccin_mocha"
 "ui.cursor.primary" = { fg = "paper", bg = "orange" }
 "ui.cursor.match" = { fg = "orange", modifiers = ["bold"] }
 "ui.cursor.primary.normal" = { fg = "paper", bg = "orange" }
-"ui.cursor.primary.insert" = { fg = "paper", bg = "green" }
-"ui.cursor.primary.select" = { fg = "paper", bg = "violet" }
+"ui.cursor.primary.insert" = { fg = "paper", bg = "orange" }
+"ui.cursor.primary.select" = { fg = "paper", bg = "orange" }
 "ui.cursor.normal" = { fg = "paper", bg = "orange_soft" }
-"ui.cursor.insert" = { fg = "paper", bg = "green_soft" }
-"ui.cursor.select" = { fg = "paper", bg = "violet_soft" }
+"ui.cursor.insert" = { fg = "paper", bg = "orange_soft" }
+"ui.cursor.select" = { fg = "paper", bg = "orange_soft" }
 "ui.cursorline.primary" = { bg = "cursorline" }
 
 "ui.menu" = { fg = "muted", bg = "panel_soft" }

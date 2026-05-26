@@ -43,11 +43,11 @@ bufferline = "multiple"  # Show when multiple buffers are open
 # Color modes in gutter
 color-modes = true
 
-# Cursor shape in different modes
+# Keep Ghostty's orange block cursor/trail aesthetic consistent in Helix.
 [editor.cursor-shape]
-insert = "bar"
+insert = "block"
 normal = "block"
-select = "underline"
+select = "block"
 
 # Status line configuration
 [editor.statusline]
